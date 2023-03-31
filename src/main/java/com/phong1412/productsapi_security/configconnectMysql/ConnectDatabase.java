@@ -12,7 +12,7 @@ public class ConnectDatabase {
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/product_db?useSSL=false");
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/landmark_database?useSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("");
         return dataSource;

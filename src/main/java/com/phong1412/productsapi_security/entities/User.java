@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,8 +18,10 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     private String id;
-    @Column(name = "name")
+    @Column(name = "username")
     private String username;
     private String password;
+    private String email;
+    private boolean account_non_locked;
     private String role;
 }

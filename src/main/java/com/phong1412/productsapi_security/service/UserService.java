@@ -1,6 +1,7 @@
 package com.phong1412.productsapi_security.service;
 
 import com.phong1412.productsapi_security.Dto.UserRecord;
+import com.phong1412.productsapi_security.Dto.UserWithRole;
 import com.phong1412.productsapi_security.exception.BadException;
 import com.phong1412.productsapi_security.exception.NotFoundException;
 import com.phong1412.productsapi_security.iservice.IUserService;;
@@ -8,6 +9,7 @@ import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,7 +29,7 @@ public class UserService implements IUserService {
     @Override
     public List<UserRecord> getAllUsers() {
         return userRepository.findAll().stream().map(user -> new UserRecord(
-                user.getId(), user.getUsername(), user.getRole()
+                user.getId(), user.getUsername(), user.getEmail(), user.getRole()
         )).toList();
     }
 
@@ -61,7 +64,6 @@ public class UserService implements IUserService {
     @Override
     public User UpdateUserById(User user) {
         if(userRepository.findUsersById(user.getId()).isPresent()) {
-            user.setRole(user.getRole());
             return userRepository.save(user);
         }
         throw new BadException("Không tìm thấy người dùng có id "+user.getId()+" để cập nhật");
@@ -86,4 +88,5 @@ public class UserService implements IUserService {
             return "Authentication Is NULL";
         }
     }
+
 }

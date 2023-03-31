@@ -1,6 +1,8 @@
 package com.phong1412.productsapi_security.security;
 
+import com.phong1412.productsapi_security.entities.Role;
 import com.phong1412.productsapi_security.entities.User;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@Transactional
 public class AppUserDetails implements UserDetails {
 
     private String userName;
@@ -30,6 +33,7 @@ public class AppUserDetails implements UserDetails {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
         /*
+
         - user.getRole() lấy chuỗi đại diện cho danh sách các quyền hạn của người dùng từ đối tượng user.
         - split(",") được sử dụng để phân tách các quyền hạn trong chuỗi thành một mảng các chuỗi.
         - Arrays.stream() tạo ra một Stream từ mảng các chuỗi này.

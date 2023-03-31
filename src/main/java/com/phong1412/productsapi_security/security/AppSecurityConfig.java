@@ -29,8 +29,8 @@ public class AppSecurityConfig {
             "api/v1/users/all",
             //"api/v1/users/authentication",
             "api/v1/users/search/**",
-            "api/v1/products/all",
-            "api/v1/products/search/**"
+            "api/v1/famousplace/all",
+            "api/v1/famousplace/search/**"
     };
     @Bean
     @Order(1)
@@ -40,7 +40,7 @@ public class AppSecurityConfig {
                 .disable()
                 .authorizeHttpRequests(
                         (author) -> author.requestMatchers(UN_SECURED_URLs).permitAll()
-                                .requestMatchers("/api/v1/users/**", "/api/v1/products/**").hasAuthority("ROLE_ADMIN").anyRequest().authenticated()
+                                .requestMatchers("/api/v1/users/**", "/api/v1/famousplace/**").hasAuthority("ROLE_ADMIN").anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
