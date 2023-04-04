@@ -1,6 +1,5 @@
 package com.phong1412.productsapi_security.security;
 
-import com.phong1412.productsapi_security.entities.Role;
 import com.phong1412.productsapi_security.entities.User;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -8,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class AppUserDetails implements UserDetails {
 
+    private User user;
     private String userName;
     private String password;
     private List<GrantedAuthority> authorities; // Danh sach quyền hạn của một người dùng
@@ -26,12 +25,13 @@ public class AppUserDetails implements UserDetails {
     public AppUserDetails(User user) {
         this.userName = user.getUsername();
         this.password = user.getPassword();
+        this.user = user;
         this.authorities = Arrays.stream(
-                user.getRole()
-                        .replaceAll("\\s","")
-                        .split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                        user.getRole()
+                                .replaceAll("\\s", "")
+                                .split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
         /*
 
         - user.getRole() lấy chuỗi đại diện cho danh sách các quyền hạn của người dùng từ đối tượng user.

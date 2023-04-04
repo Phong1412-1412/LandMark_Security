@@ -5,7 +5,7 @@ import com.phong1412.productsapi_security.entities.Famousplace;
 import java.util.List;
 import java.util.Optional;
 
-public interface IFamousPlace {
+public interface IFamousPlaceService {
     List<Famousplace> getAllFamousPlaces();
     List<Famousplace> getFamousPlaceByName(String nameplace);
     Optional<Famousplace> getFamousPlaceById(int id);

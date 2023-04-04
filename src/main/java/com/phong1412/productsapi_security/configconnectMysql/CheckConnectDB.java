@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class CheckConnectDB {
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public CheckConnectDB(DataSource dataSource) {
         this.dataSource = dataSource;

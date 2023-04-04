@@ -1,18 +1,16 @@
 package com.phong1412.productsapi_security.entities;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Entity
 @Table(name = "user")
 public class User {
@@ -22,6 +20,5 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private boolean account_non_locked;
     private String role;
 }

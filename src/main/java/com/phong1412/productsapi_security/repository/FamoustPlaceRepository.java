@@ -1,6 +1,5 @@
 package com.phong1412.productsapi_security.repository;
 
-import com.phong1412.productsapi_security.controller.FamousPlaceController;
 import com.phong1412.productsapi_security.entities.Famousplace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +13,7 @@ public interface FamoustPlaceRepository extends JpaRepository<Famousplace, Integ
 
     @Query(value = "SELECT f from Famousplace f where f.famous_name = :name")
     Optional<Famousplace> findFamousPlaceByName(@Param("name") String name);
+
+    @Query(value = "SELECT f from Famousplace f, Province p where f.id_province = p.id and p.provinceName like %:provinceName%")
+    Optional<List<Famousplace>> getFamousPlaceByProvince(@Param(value = "provinceName") String provinceName);
 }
