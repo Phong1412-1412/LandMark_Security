@@ -1,5 +1,6 @@
 package com.phong1412.productsapi_security.service;
 
+import com.phong1412.productsapi_security.Dto.ProvinceFamousPlaceDTO;
 import com.phong1412.productsapi_security.entities.Famousplace;
 import com.phong1412.productsapi_security.exception.BadException;
 import com.phong1412.productsapi_security.iservice.IFamousPlaceService;
@@ -30,10 +31,10 @@ public class FamousPlaceService implements IFamousPlaceService {
         throw new BadException("Không tìm thấy địa danh nổi tiếng có tên: " + nameplace);
     }
 
-    public List<Famousplace> getFamousPlaceByProvinceName(String provinceName) {
-        List<Famousplace> famousplaceList = famoustPlaceRepository.getFamousPlaceByProvince(provinceName).orElse(null);
-        if (famousplaceList != null) {
-            return famousplaceList;
+    public List<ProvinceFamousPlaceDTO> getFamousPlaceByProvinceName(String provinceName) {
+        Optional<List<ProvinceFamousPlaceDTO>> proPlaceDtos = famoustPlaceRepository.getFamousPlaceByProvince(provinceName);
+        if (proPlaceDtos.isPresent()) {
+            return proPlaceDtos.get();
         }
         throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành có tên: " + provinceName);
     }

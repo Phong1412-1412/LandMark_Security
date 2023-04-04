@@ -1,5 +1,6 @@
 package com.phong1412.productsapi_security.controller;
 
+import com.phong1412.productsapi_security.Dto.ProvinceFamousPlaceDTO;
 import com.phong1412.productsapi_security.entities.Famousplace;
 import com.phong1412.productsapi_security.service.FamousPlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class FamousPlaceController {
     }
 
     @GetMapping("/search/province")
-    public ResponseEntity<List<Famousplace>> getFamousByProvinceName(@RequestParam String provinceName) {
+    public ResponseEntity<List<ProvinceFamousPlaceDTO>> getFamousByProvinceName(@RequestParam String provinceName) {
         return ResponseEntity.ok().body(famousPlaceService.getFamousPlaceByProvinceName(provinceName));
     }
 
