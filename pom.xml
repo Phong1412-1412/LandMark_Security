@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.phong1412</groupId>
-    <artifactId>ProductsAPI_Security</artifactId>
+    <artifactId>LandmarkAPI_Security</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ProductsAPI_Security</name>
     <description>ProductsAPI_Security</description>

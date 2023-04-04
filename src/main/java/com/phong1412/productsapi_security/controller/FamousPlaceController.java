@@ -31,9 +31,19 @@ public class FamousPlaceController {
         return ResponseEntity.ok().body(famousPlaceService.getFamousPlaceByName(famousname));
     }
 
-    @GetMapping("/search/province")
+    @GetMapping("/details/province")
     public ResponseEntity<List<ProvinceFamousPlaceDTO>> getFamousByProvinceName(@RequestParam String provinceName) {
         return ResponseEntity.ok().body(famousPlaceService.getFamousPlaceByProvinceName(provinceName));
+    }
+
+    @GetMapping("/details/all")
+    public ResponseEntity<List<ProvinceFamousPlaceDTO>> getFamousPlaceDetailsAll() {
+        return ResponseEntity.ok().body(famousPlaceService.getFamousPlaceDetailsAll());
+    }
+
+    @GetMapping("/details/search")
+    public ResponseEntity<List<ProvinceFamousPlaceDTO>> getPlaceDetailsByName(@RequestParam String name) {
+        return ResponseEntity.ok().body(famousPlaceService.getFamousPlaceByDetailsByPlaceName(name));
     }
 
     @PostMapping("/add")

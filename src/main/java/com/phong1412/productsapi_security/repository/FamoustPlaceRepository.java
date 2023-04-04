@@ -20,4 +20,16 @@ public interface FamoustPlaceRepository extends JpaRepository<Famousplace, Integ
             "FROM Famousplace f, Province p, Coordinates c " +
             "WHERE f.id_province = p.id and f.id = c.famousplace and p.provinceName LIKE  concat('%', :provinceName, '%')")
     Optional<List<ProvinceFamousPlaceDTO>> getFamousPlaceByProvince(@Param(value = "provinceName") String provinceName);
+
+    @Query(value = "SELECT new com.phong1412.productsapi_security.Dto" +
+            ".ProvinceFamousPlaceDTO(f.id, p.provinceName, f.famous_name, f.address , f.description, f.image, c) " +
+            "FROM Famousplace f, Province p, Coordinates c " +
+            "WHERE f.id_province = p.id and f.id = c.famousplace")
+    Optional<List<ProvinceFamousPlaceDTO>> getFamousPlaceByDetailsAll();
+
+    @Query(value = "SELECT new com.phong1412.productsapi_security.Dto" +
+            ".ProvinceFamousPlaceDTO(f.id, p.provinceName, f.famous_name, f.address , f.description, f.image, c) " +
+            "FROM Famousplace f, Province p, Coordinates c " +
+            "WHERE f.id_province = p.id and f.id = c.famousplace and f.famous_name like concat('%', :name,'%') ")
+    Optional<List<ProvinceFamousPlaceDTO>> getFamousPlaceByDetailsByPlaceName(@Param(value = "name") String name);
 }

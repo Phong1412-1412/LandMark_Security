@@ -28,10 +28,9 @@ public class AppSecurityConfig {
     }
 
     private final String[] UN_SECURED_URLs = {
-            "/api/v1/users/all",
-            "/api/v1/users/search/**",
             "/api/v1/provinces/all",
             "/api/v1/provinces/search/**",
+            "/api/v1/famousPlace/details/**",
             "/api/v1/famousPlace/all",
             "/api/v1/famousPlace/search/**"
     };
@@ -44,6 +43,8 @@ public class AppSecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(UN_SECURED_URLs).permitAll()
+                .requestMatchers("/api/v1/users/profile/**")
+                .hasRole("USER")
                 .requestMatchers("/api/v1/users/**", "/api/v1/famousPlace/**", "/api/v1/provinces/**")
                 .hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()

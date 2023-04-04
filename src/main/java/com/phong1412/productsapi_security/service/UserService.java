@@ -1,19 +1,20 @@
 package com.phong1412.productsapi_security.service;
 
 import com.phong1412.productsapi_security.Dto.UserRecord;
+import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.exception.BadException;
 import com.phong1412.productsapi_security.exception.NotFoundException;
 import com.phong1412.productsapi_security.iservice.IUserService;
-import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -32,7 +33,7 @@ public class UserService implements IUserService {
     @Override
     public User createUser(User newuser) {
         Optional<User> user = userRepository.findUsersByUsername(newuser.getUsername());
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             newuser.setId(UUID.randomUUID().toString());
             newuser.setPassword(passwordEncoder.encode(newuser.getPassword()));
             userRepository.save(newuser);
@@ -43,48 +44,47 @@ public class UserService implements IUserService {
 
     @Override
     public User findUserById(String id) {
-        if(userRepository.findUsersById(id).isPresent()){
-           return userRepository.findUsersById(id).get();
+        if (userRepository.findUsersById(id).isPresent()) {
+            return userRepository.findUsersById(id).get();
         }
-       throw new NotFoundException("Không tìm thấy user có id: "+ id);
+        throw new NotFoundException("Không tìm thấy user có id: " + id);
     }
 
     @Override
     public User findUserByName(String name) {
-        if(userRepository.findUsersByUsername(name).isPresent()){
+        if (userRepository.findUsersByUsername(name).isPresent()) {
             return userRepository.findUsersByUsername(name).get();
         }
-        throw new NotFoundException("Không tìm thấy người dùng có tên: "+name);
+        throw new NotFoundException("Không tìm thấy người dùng có tên: " + name);
     }
 
     @Override
     public User UpdateUserById(User user) {
-        if(userRepository.findUsersById(user.getId()).isPresent()) {
+        if (userRepository.findUsersById(user.getId()).isPresent()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
-        throw new BadException("Không tìm thấy người dùng có id "+user.getId()+" để cập nhật");
+        throw new BadException("Không tìm thấy người dùng có id " + user.getId() + " để cập nhật");
     }
 
     @Override
     public void deleteuser(String id) {
-        if(userRepository.findUsersById(id).isPresent()) {
+        if (userRepository.findUsersById(id).isPresent()) {
             userRepository.delete(userRepository.findUsersById(id).get());
         }
-        throw new BadException("Không tìm thấy đối tượng cần xóa: "+id);
+        throw new BadException("Không tìm thấy đối tượng cần xóa: " + id);
     }
 
     public String getAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.isAuthenticated()) {
-            System.out.println("Authentication Is: "+ authentication);
+        if (authentication != null && authentication.isAuthenticated()) {
+            System.out.println("Authentication Is: " + authentication);
             return authentication.toString();
-        }
-        else
-        { System.out.println("Authentication Is NULL");
+        } else {
+            System.out.println("Authentication Is NULL");
             return "Authentication Is NULL";
         }
     }
-
 
 
 }

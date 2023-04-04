@@ -15,7 +15,7 @@ public class ProvinceFamousPlaceDTO {
     private String address;
     private String description;
     private String image;
-    private Coordinates coordinates;
+    private CoordinatesDto coordinates;
 
     public ProvinceFamousPlaceDTO(int id, String provinceName, String famousName, String address, String description, String image, Coordinates coordinates) {
         this.id = id;
@@ -24,6 +24,6 @@ public class ProvinceFamousPlaceDTO {
         this.address = address;
         this.description = description;
         this.image = image;
-        this.coordinates = coordinates;
+        this.coordinates = new CoordinatesDto(coordinates.getLatitude(), coordinates.getLongitude());
     }
 }

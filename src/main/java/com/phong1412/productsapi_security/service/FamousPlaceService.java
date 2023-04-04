@@ -39,6 +39,22 @@ public class FamousPlaceService implements IFamousPlaceService {
         throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành có tên: " + provinceName);
     }
 
+    public List<ProvinceFamousPlaceDTO> getFamousPlaceDetailsAll() {
+        Optional<List<ProvinceFamousPlaceDTO>> proPlaceDtos = famoustPlaceRepository.getFamousPlaceByDetailsAll();
+        if (proPlaceDtos.isPresent()) {
+            return proPlaceDtos.get();
+        }
+        throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành");
+    }
+
+    public List<ProvinceFamousPlaceDTO> getFamousPlaceByDetailsByPlaceName(String name) {
+        Optional<List<ProvinceFamousPlaceDTO>> proPlaceDtos = famoustPlaceRepository.getFamousPlaceByDetailsByPlaceName(name);
+        if (proPlaceDtos.isPresent()) {
+            return proPlaceDtos.get();
+        }
+        throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành");
+    }
+
     @Override
     public Optional<Famousplace> getFamousPlaceById(int id) {
         if (famoustPlaceRepository.findById(id).isPresent()) {

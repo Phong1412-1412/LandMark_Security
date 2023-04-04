@@ -1,11 +1,11 @@
 package com.phong1412.productsapi_security.controller;
 
-import com.phong1412.productsapi_security.Dto.LoginDto;
 import com.phong1412.productsapi_security.Dto.UserRecord;
 import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody User user ) {
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         return ResponseEntity.ok().body(userService.createUser(user));
     }
 
@@ -47,8 +47,23 @@ public class UserController {
         return ResponseEntity.ok().body(userService.UpdateUserById(user));
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<User> getProfile() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok().body(userService.findUserByName(userName));
+    }
+
+    @PutMapping("/profile/update")
+    public ResponseEntity<User> updateUserAuthenticate(@RequestBody UserRecord user) {
+        User newUser = userService.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
+        newUser.setUsername(user.name());
+        newUser.setPassword(user.email());
+        return ResponseEntity.ok().body(userService.UpdateUserById(newUser));
+    }
+
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable String id ) {
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
         userService.deleteuser(id);
         return ResponseEntity.ok().body("delete user successfully");
     }
