@@ -4,13 +4,16 @@ import com.phong1412.productsapi_security.Dto.UserRecord;
 import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/api/v1/users")
 public class UserController {
 
@@ -58,7 +61,7 @@ public class UserController {
         User newUser = userService.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
         newUser.setUsername(user.name());
         newUser.setPassword(user.email());
-        return ResponseEntity.ok().body(userService.UpdateUserById(newUser));
+        return ResponseEntity.status(HttpStatus.valueOf(201)).body(userService.UpdateUserById(newUser));
     }
 
 
@@ -66,6 +69,20 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         userService.deleteuser(id);
         return ResponseEntity.ok().body("delete user successfully");
+    }
+
+    @GetMapping("/index")
+    public String getAllUsersIndexPage(Model model) {
+        List<User> users = userService.getAllUsersDetails();
+        model.addAttribute("users", users);
+        return "index";
+    }
+
+    @GetMapping("/details/{id}")
+    public String userDetails(Model model, @PathVariable String id) {
+        User users = userService.findUserById(id);
+        model.addAttribute("users", users);
+        return "userDetails";
     }
 
 }

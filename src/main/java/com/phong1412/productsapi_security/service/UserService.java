@@ -39,7 +39,7 @@ public class UserService implements IUserService {
             userRepository.save(newuser);
             return newuser;
         }
-        throw new BadException("Người dùng đã tồn tại trong cơ sở dữ liệu!");
+        throw new BadException("User already exists in the database!");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class UserService implements IUserService {
         if (userRepository.findUsersById(id).isPresent()) {
             return userRepository.findUsersById(id).get();
         }
-        throw new NotFoundException("Không tìm thấy user có id: " + id);
+        throw new NotFoundException("Can't find user with id: " + id);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UserService implements IUserService {
         if (userRepository.findUsersByUsername(name).isPresent()) {
             return userRepository.findUsersByUsername(name).get();
         }
-        throw new NotFoundException("Không tìm thấy người dùng có tên: " + name);
+        throw new NotFoundException("Can't find user with name: " + name);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class UserService implements IUserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
-        throw new BadException("Không tìm thấy người dùng có id " + user.getId() + " để cập nhật");
+        throw new BadException("Can't find user with id " + user.getId() + " to update");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UserService implements IUserService {
         if (userRepository.findUsersById(id).isPresent()) {
             userRepository.delete(userRepository.findUsersById(id).get());
         }
-        throw new BadException("Không tìm thấy đối tượng cần xóa: " + id);
+        throw new BadException("The object to be deleted could not be found: " + id);
     }
 
     public String getAuthentication() {
@@ -86,5 +86,10 @@ public class UserService implements IUserService {
         }
     }
 
+    public List<User> getAllUsersDetails() {
+        return userRepository.findAll().stream().map(user -> new User(
+                user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole()
+        )).toList();
+    }
 
 }

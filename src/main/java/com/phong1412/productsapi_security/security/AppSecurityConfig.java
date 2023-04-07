@@ -1,5 +1,6 @@
 package com.phong1412.productsapi_security.security;
 
+import com.phong1412.productsapi_security.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,13 +8,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
@@ -21,6 +23,12 @@ public class AppSecurityConfig {
 
     @Autowired
     private AppUserDetailsService appUserDetailsService;
+
+    @Autowired
+    private JwtAuthenticationFilter authenticationFilter;
+
+    @Autowired
+    private CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,7 +40,8 @@ public class AppSecurityConfig {
             "/api/v1/provinces/search/**",
             "/api/v1/famousPlace/details/**",
             "/api/v1/famousPlace/all",
-            "/api/v1/famousPlace/search/**"
+            "/api/v1/famousPlace/search/**",
+            "/api/v1/authenticate/**"
     };
 
     @Bean
@@ -41,16 +50,18 @@ public class AppSecurityConfig {
         http
                 .csrf()
                 .disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeHttpRequests()
                 .requestMatchers(UN_SECURED_URLs).permitAll()
                 .requestMatchers("/api/v1/users/profile/**")
-                .hasRole("USER")
+                .hasAuthority("ROLE_USER")
                 .requestMatchers("/api/v1/users/**", "/api/v1/famousPlace/**", "/api/v1/provinces/**")
                 .hasAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated()
                 .and()
-                .httpBasic(Customizer.withDefaults());
-
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

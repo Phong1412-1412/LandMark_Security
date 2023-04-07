@@ -4,6 +4,7 @@ import com.phong1412.productsapi_security.entities.Province;
 import com.phong1412.productsapi_security.service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +40,12 @@ public class ProvinceController {
     public ResponseEntity<String> deleteProvice(@PathVariable int id) {
         provinceService.deleteProvice(id);
         return ResponseEntity.ok().body("delete user successfully");
+    }
+
+    @GetMapping("/index")
+    public String getAllProviceIndex(Model model) {
+        List<Province> provinces = provinceService.getAllProvice();
+        model.addAttribute("provinces", provinces);
+        return "index";
     }
 }

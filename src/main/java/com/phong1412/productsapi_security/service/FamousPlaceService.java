@@ -28,7 +28,7 @@ public class FamousPlaceService implements IFamousPlaceService {
         if (famousplaceList.stream().count() > 0) {
             return famousplaceList;
         }
-        throw new BadException("Không tìm thấy địa danh nổi tiếng có tên: " + nameplace);
+        throw new BadException("The famous place with name could not be found: " + nameplace);
     }
 
     public List<ProvinceFamousPlaceDTO> getFamousPlaceByProvinceName(String provinceName) {
@@ -36,7 +36,7 @@ public class FamousPlaceService implements IFamousPlaceService {
         if (proPlaceDtos.isPresent()) {
             return proPlaceDtos.get();
         }
-        throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành có tên: " + provinceName);
+        throw new BadException("Can't find any famous place in province with name: " + provinceName);
     }
 
     public List<ProvinceFamousPlaceDTO> getFamousPlaceDetailsAll() {
@@ -44,7 +44,7 @@ public class FamousPlaceService implements IFamousPlaceService {
         if (proPlaceDtos.isPresent()) {
             return proPlaceDtos.get();
         }
-        throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành");
+        throw new BadException("Can't find any famous place!!");
     }
 
     public List<ProvinceFamousPlaceDTO> getFamousPlaceByDetailsByPlaceName(String name) {
@@ -52,7 +52,7 @@ public class FamousPlaceService implements IFamousPlaceService {
         if (proPlaceDtos.isPresent()) {
             return proPlaceDtos.get();
         }
-        throw new BadException("Không tìm thấy địa danh nào trong tỉnh thành");
+        throw new BadException("Can't find any famous place with name: " + name);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class FamousPlaceService implements IFamousPlaceService {
         if (famoustPlaceRepository.findById(id).isPresent()) {
             return famoustPlaceRepository.findById(id);
         }
-        throw new BadException("Không tìm thấy địa danh có id: " + id);
+        throw new BadException("Can't find any famous place id: " + id);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class FamousPlaceService implements IFamousPlaceService {
             famoustPlaceRepository.save(famousPlace);
             return famousPlace;
         }
-        throw new BadException("Địa danh đã tồn tại trong database!!!");
+        throw new BadException("The famous place already exists in database!!!");
     }
 
     @Override
@@ -78,13 +78,13 @@ public class FamousPlaceService implements IFamousPlaceService {
         if (famoustPlaceRepository.findById(famousPlacer.getId()).isPresent()) {
             return famoustPlaceRepository.save(famousPlacer);
         }
-        throw new BadException("Không tìm thấy địa danh có id: " + famousPlacer.getId() + " để cập nhật");
+        throw new BadException("Can't fina famous place id: " + famousPlacer.getId() + " to update!");
     }
 
     @Override
     public void deleteFamousPlace(int id) {
         if (!famoustPlaceRepository.findById(id).isPresent()) {
-            throw new BadException("Không tìm thấy địa danh có id: " + id + " để xóa");
+            throw new BadException("Can't find famous place with id: " + id + " to delete!");
         }
         famoustPlaceRepository.delete(famoustPlaceRepository.findById(id).get());
     }

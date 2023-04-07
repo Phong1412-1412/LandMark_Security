@@ -24,7 +24,7 @@ public class ProvinceService implements IProvinceService {
         if (provinceRepository.findProviceByProvinceName(provinceName).isPresent()) {
             return provinceRepository.findProviceByProvinceName(provinceName).get();
         }
-        throw new NotFoundException("Không tìm thấy tỉnh thành có tên: " + provinceName);
+        throw new NotFoundException("Cant' find province with name: " + provinceName);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ProvinceService implements IProvinceService {
         if (check == null) {
             return provinceRepository.save(province);
         }
-        throw new BadException("Tỉnh thành đã tồn tại trong database!!!");
+        throw new BadException("The province is already exists in database!!!");
     }
 
     @Override
@@ -41,13 +41,13 @@ public class ProvinceService implements IProvinceService {
         if (provinceRepository.findById(province.getId()).isPresent()) {
             return provinceRepository.save(province);
         }
-        throw new BadException("Không tìm thấy tỉnh thành có id: " + province.getId() + " để cập nhật");
+        throw new BadException("Can't find province with id: " + province.getId() + " to update");
     }
 
     @Override
     public void deleteProvice(int id) {
         if (!provinceRepository.findById(id).isPresent()) {
-            throw new BadException("Không tìm thấy địa danh có id: " + id + " để xóa");
+            throw new BadException("Can't find province with id: " + id + " to delete");
         }
         provinceRepository.delete(provinceRepository.findById(id).get());
     }
