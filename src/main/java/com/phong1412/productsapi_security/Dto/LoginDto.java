@@ -8,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginDto {
     //it's a Data Trasfer Object for Login
-    private String name ;
-    private String password ;
+    private String userAccount;
+    private String password;
 }

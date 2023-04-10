@@ -1,6 +1,7 @@
 package com.phong1412.productsapi_security.controller;
 
 import com.phong1412.productsapi_security.Dto.UserRecord;
+import com.phong1412.productsapi_security.Dto.UserUpdate;
 import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,17 +54,13 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok().body(userService.findUserByName(userName));
+        return ResponseEntity.ok().body(userService.findUserByAccount(userName));
     }
 
     @PutMapping("/profile/update")
-    public ResponseEntity<User> updateUserAuthenticate(@RequestBody UserRecord user) {
-        User newUser = userService.findUserByName(SecurityContextHolder.getContext().getAuthentication().getName());
-        newUser.setUsername(user.name());
-        newUser.setPassword(user.email());
-        return ResponseEntity.status(HttpStatus.valueOf(201)).body(userService.UpdateUserById(newUser));
+    public ResponseEntity<User> updateUserAuthenticate(@RequestBody UserUpdate user) {
+        return ResponseEntity.status(HttpStatus.valueOf(201)).body(userService.updateUserByName(user));
     }
-
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {

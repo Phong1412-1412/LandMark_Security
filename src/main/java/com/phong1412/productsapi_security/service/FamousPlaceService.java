@@ -6,6 +6,9 @@ import com.phong1412.productsapi_security.exception.BadException;
 import com.phong1412.productsapi_security.iservice.IFamousPlaceService;
 import com.phong1412.productsapi_security.repository.FamoustPlaceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,4 +92,8 @@ public class FamousPlaceService implements IFamousPlaceService {
         famoustPlaceRepository.delete(famoustPlaceRepository.findById(id).get());
     }
 
+    public Page<Famousplace> getAllFamousPlacePage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return famoustPlaceRepository.findAll(pageable);
+    }
 }

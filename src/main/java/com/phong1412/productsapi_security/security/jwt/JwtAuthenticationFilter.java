@@ -1,5 +1,6 @@
 package com.phong1412.productsapi_security.security.jwt;
 
+import com.phong1412.productsapi_security.security.AppUserDetails;
 import com.phong1412.productsapi_security.security.AppUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,7 +10,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,17 +30,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         String token = null;
-        String userName = null;
+        String account = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            userName = jwtService.extractUserNameFromToken(token);
+            account = jwtService.extractUserNameFromToken(token);
         }
-        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails user = userDetailsService.loadUserByUsername(userName);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    user.getUsername(), null, user.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        if (account != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            AppUserDetails user = (AppUserDetails) userDetailsService.loadUserByUsername(account);
+            if (jwtService.validateToken(token, user)) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        user.getUserAccount(), null, user.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
         }
         filterChain.doFilter(request, response);
     }

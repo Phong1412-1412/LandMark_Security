@@ -14,16 +14,14 @@ public class AppUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-
-    //phương thức loadUserByUsername() để truy xuất thông tin người dùng dựa trên tên đăng nhập (username).
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUsersByUsername(username).orElse(null);
+    public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
+        User user = userRepository.findUserByUseraccount(account).orElse(null);
         if (user == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(account);
         }
         return new AppUserDetails(user);
-        //trả về một đối tượng UserDetails, đại diện cho thông tin người dùng
+        //returns a UserDetails object, representing user information
     }
 
 }

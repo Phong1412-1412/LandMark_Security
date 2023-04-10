@@ -1,6 +1,7 @@
 package com.phong1412.productsapi_security.security.jwt;
 
 import com.phong1412.productsapi_security.repository.UserRepository;
+import com.phong1412.productsapi_security.security.AppUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,7 +9,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -24,17 +24,17 @@ public class JwtService {
     private final UserRepository userRepository;
     @Value(value = "${spring.jwt.secret}")
     private String JWT_SECRET;
-    private final long JWT_EXPIRATION_TIME = 3600000L;
+    private final long JWT_EXPIRATION_TIME = 1000 * 60 * 60;
 
-    public String getGeneratedToken(String userName) {
+    public String getGeneratedToken(String account) {
         Map<String, Object> claims = new HashMap<>();
-        return generateTokenForUser(claims, userName);
+        return generateTokenForUser(claims, account);
     }
 
-    private String generateTokenForUser(Map<String, Object> claims, String userName) {
+    private String generateTokenForUser(Map<String, Object> claims, String account) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userName)
+                .setSubject(account)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, getSignKey()).compact();
@@ -70,8 +70,8 @@ public class JwtService {
         return extractExpirationTimeFromToken(theToken).before(new Date());
     }
 
-    public boolean validateToken(String theToken, UserDetails userDetails) {
-        final String username = extractUserNameFromToken(theToken);
-        return (userDetails.getUsername().equals(username) && !isTokenExpiration(theToken));
+    public boolean validateToken(String theToken, AppUserDetails userDetails) {
+        final String account = extractUserNameFromToken(theToken);
+        return (userDetails.getUserAccount().equals(account) && !isTokenExpiration(theToken));
     }
 }

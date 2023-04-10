@@ -17,12 +17,14 @@ import java.util.stream.Collectors;
 public class AppUserDetails implements UserDetails {
 
     private User user;
+    private String userAccount;
     private String userName;
     private String password;
-    private List<GrantedAuthority> authorities; // Danh sach quyền hạn của một người dùng
+    private List<GrantedAuthority> authorities; // List of permissions of a user
 
-    // phương thức tạo mới một UserDetails đc gán giá trị bằng user đăng nhập vào app.
+    // method that creates a new UserDetails that is assigned a value by the user logged into the app.
     public AppUserDetails(User user) {
+        this.userAccount = user.getUseraccount();
         this.userName = user.getUsername();
         this.password = user.getPassword();
         this.user = user;
@@ -32,53 +34,39 @@ public class AppUserDetails implements UserDetails {
                                 .split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        /*
-
-        - user.getRole() lấy chuỗi đại diện cho danh sách các quyền hạn của người dùng từ đối tượng user.
-        - split(",") được sử dụng để phân tách các quyền hạn trong chuỗi thành một mảng các chuỗi.
-        - Arrays.stream() tạo ra một Stream từ mảng các chuỗi này.
-        - map(SimpleGrantedAuthority::new) được sử dụng để chuyển đổi mỗi chuỗi trong Stream thành một đối tượng SimpleGrantedAuthority bằng cách sử dụng constructor của đối tượng này để khởi tạo với chuỗi quyền hạn tương ứng.
-        - collect(Collectors.toList()) được sử dụng để thu thập các đối tượng SimpleGrantedAuthority thành một danh sách List<SimpleGrantedAuthority>.
-         */
     }
 
-    // Trả về danh sách các đối tượng GrantedAuthority biểu diễn các quyền hạn được cấp cho người dùng.
+    // Returns a list of GrantedAuthority objects representing the permissions granted to the user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
-    //Trả về mật khẩu được lưu trữ cho người dùng.
     @Override
     public String getPassword() {
         return this.password;
     }
 
-    //Trả về tên đăng nhập được sử dụng để xác thực người dùng.
     @Override
     public String getUsername() {
         return this.userName;
     }
 
-    //Trả về true nếu tài khoản của người dùng không bị hết hạn.
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    //Trả về true nếu tài khoản của người dùng không bị khóa.
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    //Trả về true nếu thông tin xác thực của người dùng không bị hết hạn.
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    // Trả về true nếu tài khoản của người dùng đã được kích hoạt.
     @Override
     public boolean isEnabled() {
         return true;

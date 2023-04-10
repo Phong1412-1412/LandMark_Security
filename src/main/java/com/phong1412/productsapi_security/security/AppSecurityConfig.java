@@ -4,7 +4,6 @@ import com.phong1412.productsapi_security.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,11 +40,11 @@ public class AppSecurityConfig {
             "/api/v1/famousPlace/details/**",
             "/api/v1/famousPlace/all",
             "/api/v1/famousPlace/search/**",
-            "/api/v1/authenticate/**"
+            "/api/v1/authenticate/**",
+            "/api/v1/users/authentication/**"
     };
 
     @Bean
-    @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
@@ -60,7 +59,7 @@ public class AppSecurityConfig {
                 .hasAuthority("ROLE_ADMIN")
                 .and()
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -70,14 +69,7 @@ public class AppSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-
     //After passing filterChain an Authentication Object will be created.
-    //Sau khi Authentication Object được tạo ra thì filter sẽ gọi đến AuthenticationManager để xác thực người dùng
-    //ProviderManager là một Iterface của AuthenticationManager, Và các phương thức xác thưc được lấy từ nó.
-
-
-    // Tìm kiếm user thông qua loadUserByUserName() từ database
-
     @Bean
     public AuthenticationProvider authenticationProvider() throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

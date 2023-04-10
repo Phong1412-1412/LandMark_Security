@@ -1,5 +1,6 @@
 package com.phong1412.productsapi_security.security.jwt;
 
+import com.phong1412.productsapi_security.Dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,12 +20,12 @@ public class JwtController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping
-    public String getTokenAuthenticatedUser(@RequestBody JwtAuthenticationRequest authRequest) {
+    public String getTokenAuthenticatedUser(@RequestBody LoginDto authRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(authRequest.getUserAccount(), authRequest.getPassword())
         );
         if (authentication.isAuthenticated()) {
-            return jwtService.getGeneratedToken(authRequest.getUserName());
+            return jwtService.getGeneratedToken(authRequest.getUserAccount());
         }
         throw new UsernameNotFoundException("Invalid User Credentials!!!");
     }

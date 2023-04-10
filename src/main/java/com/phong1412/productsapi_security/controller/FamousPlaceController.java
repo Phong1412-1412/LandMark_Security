@@ -4,6 +4,7 @@ import com.phong1412.productsapi_security.Dto.ProvinceFamousPlaceDTO;
 import com.phong1412.productsapi_security.entities.Famousplace;
 import com.phong1412.productsapi_security.service.FamousPlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,5 +61,13 @@ public class FamousPlaceController {
     public ResponseEntity<String> deleteUser(@PathVariable int id) {
         famousPlaceService.deleteFamousPlace(id);
         return ResponseEntity.ok().body("delete user successfully");
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<Famousplace>> getFamousPlacePage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Famousplace> famousplaces = famousPlaceService.getAllFamousPlacePage(page, size);
+        return ResponseEntity.ok().body(famousplaces);
     }
 }

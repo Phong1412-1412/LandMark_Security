@@ -1,6 +1,7 @@
 package com.phong1412.productsapi_security.service;
 
 import com.phong1412.productsapi_security.Dto.UserRecord;
+import com.phong1412.productsapi_security.Dto.UserUpdate;
 import com.phong1412.productsapi_security.entities.User;
 import com.phong1412.productsapi_security.exception.BadException;
 import com.phong1412.productsapi_security.exception.NotFoundException;
@@ -13,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -26,14 +26,14 @@ public class UserService implements IUserService {
     @Override
     public List<UserRecord> getAllUsers() {
         return userRepository.findAll().stream().map(user -> new UserRecord(
-                user.getId(), user.getUsername(), user.getEmail(), user.getRole()
+                user.getId(), user.getUseraccount(), user.getUsername(), user.getEmail(), user.getRole()
         )).toList();
     }
 
     @Override
     public User createUser(User newuser) {
-        Optional<User> user = userRepository.findUsersByUsername(newuser.getUsername());
-        if (!user.isPresent()) {
+        User user = userRepository.findUsersByUsername(newuser.getUsername()).orElse(null);
+        if (user == null && userRepository.findUserByUseraccount(newuser.getUseraccount()).isEmpty()) {
             newuser.setId(UUID.randomUUID().toString());
             newuser.setPassword(passwordEncoder.encode(newuser.getPassword()));
             userRepository.save(newuser);
@@ -58,6 +58,13 @@ public class UserService implements IUserService {
         throw new NotFoundException("Can't find user with name: " + name);
     }
 
+    public User findUserByAccount(String account) {
+        if (userRepository.findUserByUseraccount(account).isPresent()) {
+            return userRepository.findUserByUseraccount(account).get();
+        }
+        throw new NotFoundException("Can't find user with account name: " + account);
+    }
+
     @Override
     public User UpdateUserById(User user) {
         if (userRepository.findUsersById(user.getId()).isPresent()) {
@@ -68,9 +75,22 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User updateUserByName(UserUpdate userUpdate) {
+        User user = userRepository.findUserByUseraccount(userUpdate.useraccount()).orElse(null);
+        if (user != null) {
+            user.setUsername(userUpdate.username());
+            user.setEmail(userUpdate.email());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepository.save(user);
+        }
+        throw new BadException("Can't find user with name " + userUpdate.username() + " to update");
+    }
+
+    @Override
     public void deleteuser(String id) {
         if (userRepository.findUsersById(id).isPresent()) {
             userRepository.delete(userRepository.findUsersById(id).get());
+            return;
         }
         throw new BadException("The object to be deleted could not be found: " + id);
     }
@@ -88,7 +108,7 @@ public class UserService implements IUserService {
 
     public List<User> getAllUsersDetails() {
         return userRepository.findAll().stream().map(user -> new User(
-                user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole()
+                user.getId(), user.getUseraccount(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole()
         )).toList();
     }
 
