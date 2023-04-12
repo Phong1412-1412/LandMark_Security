@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
 
@@ -53,8 +51,12 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok().body(userService.findUserByAccount(userName));
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        String userAccount = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (SecurityContextHolder.getContext().getAuthentication().getDetails() != null) {
+            return ResponseEntity.ok().body(userService.findUserByName(userAccount));
+        }
+        return ResponseEntity.ok().body(userService.findUserByAccount(userAccount));
     }
 
     @PutMapping("/profile/update")
@@ -67,19 +69,4 @@ public class UserController {
         userService.deleteuser(id);
         return ResponseEntity.ok().body("delete user successfully");
     }
-
-    @GetMapping("/index")
-    public String getAllUsersIndexPage(Model model) {
-        List<User> users = userService.getAllUsersDetails();
-        model.addAttribute("users", users);
-        return "index";
-    }
-
-    @GetMapping("/details/{id}")
-    public String userDetails(Model model, @PathVariable String id) {
-        User users = userService.findUserById(id);
-        model.addAttribute("users", users);
-        return "userDetails";
-    }
-
 }

@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -10,19 +11,16 @@
     <title>ADMIN PAGE</title>
 </head>
 <body>
-<div class="container mt-3">
-    <h2>ADMIN PAGE</h2>
-    <p>Welcome to manager page</p>
-    <form class="form-inline mb-5 mt-5" id="search-form">
-        <div class="form-group mr-2">
-            <input type="text" class="form-control" placeholder="Tìm kiếm..." id="search-input">
-        </div>
-        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-    </form>
+<div class="container mt-3 text-center">
+    <div><h2>Manage Users</h2></div>
+    <div class="m-2">
+        <a class="h3" th:href="@{/api/v1/users/new}">Add New User</a>
+    </div>
     <table class="table table-bordered" id="user-table">
         <thead>
         <tr>
             <th>ID</th>
+            <th>Account</th>
             <th>NAME</th>
             <th>Password</th>
             <th>Email</th>
@@ -32,15 +30,15 @@
         </thead>
         <tbody>
         <tr th:each="user: ${users}" th:data-user-id="${user.id}">
-            <td th:text="${user.id}"></td>
+            <td th:text="${user.getUseraccount()}"></td>
             <td th:text="${user.username}"></td>
             <td th:text="${user.password}"></td>
             <td th:text="${user.email}"></td>
             <td th:text="${user.role}"></td>
             <td>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-warning mr-5">UPDATE</button>
-                    <button type="button" class="btn btn-danger">DELETE</button>
+                    <a class="h4 m-2" th:href="@{'/api/v1/users/update/' + ${user.id}}">Edit</a>
+                    <a class="h4 m-2" th:href="@{'/api/v1/users/delete/' + ${user.id}}">Delete</a>
                 </div>
             </td>
         </tr>

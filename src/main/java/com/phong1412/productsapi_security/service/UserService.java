@@ -78,6 +78,13 @@ public class UserService implements IUserService {
     public User updateUserByName(UserUpdate userUpdate) {
         User user = userRepository.findUserByUseraccount(userUpdate.useraccount()).orElse(null);
         if (user != null) {
+            user.setUseraccount(user.getUseraccount());
+            if (userUpdate.username().isEmpty()) {
+                user.setUsername(user.getUsername());
+            }
+            if (userUpdate.email().isEmpty()) {
+                user.setEmail(user.getEmail());
+            }
             user.setUsername(userUpdate.username());
             user.setEmail(userUpdate.email());
             user.setPassword(passwordEncoder.encode(user.getPassword()));

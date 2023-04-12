@@ -8,45 +8,67 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header" th:text="${users.username}">'s Details</div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                        <tr>
-                            <th>ID</th>
-                            <td th:text="${users.id}"></td>
-                        </tr>
-                        <tr>
-                            <th>Name</th>
-                            <td th:text="${users.username}"></td>
-                        </tr>
-                        <tr>
-                            <th>Password</th>
-                            <td th:text="${users.password}"></td>
-                        </tr>
-                        <tr>
-                            <th>Email</th>
-                            <td th:text="${users.email}"></td>
-                        </tr>
-                        <tr>
-                            <th>Role</th>
-                            <td th:text="${users.role}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
+<div class="container-fluid ">
+    <div>
+        <h2>
+            Add new user
+        </h2>
+    </div>
+    <form th:acction="@{/api/v1/users/save}" method="POST" th:object="${user} "
+          style="max-width: 500px; margin: 0 auto">
+        <input type="hidden" th:field="*{id}">
+        <div class="border border-secondary rounded p-3">
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Account Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" th:field="*{useraccount}" class="form-control" required minlength="8"
+                           maxlength="45"/>
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">User Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" th:field="*{username}" class="form-control" required minlength="8"
+                           maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Password:</label>
+                <div class="col-sm-8">
+                    <input type="password" th:field="*{password}" class="form-control" required minlength="8"
+                           maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Email:</label>
+                <div class="col-sm-8">
+                    <input type="email" th:field="*{email}" class="form-control" required minlength="8" maxlength="45"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Account_non_locked:</label>
+                <div class="col-sm-8">
+                    <input type="hidden" th:field="*{role}" class="form-control" required minlength="8" maxlength="45"
+                           value="ROLE_USER"/>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-2">Save</button>
+                <button type="button" class="btn btn-secondary m-2" onclick="cancelForm()">Cancel</button>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
-<script src="../static/js.js"></script>
+<script type="text/javascript">
+    function cancelForm() {
+        window.location = "[[@{/api/v1/users/index}]]";
+    }
+</script>
 </body>
 </html>

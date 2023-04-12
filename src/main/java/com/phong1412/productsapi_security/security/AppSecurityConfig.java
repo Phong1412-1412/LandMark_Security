@@ -38,7 +38,7 @@ public class AppSecurityConfig {
             "/api/v1/provinces/all",
             "/api/v1/provinces/search/**",
             "/api/v1/famousPlace/details/**",
-            "/api/v1/famousPlace/all",
+            "/api/v1/famousPlace/all/**",
             "/api/v1/famousPlace/search/**",
             "/api/v1/authenticate/**",
             "/api/v1/users/authentication/**"
@@ -54,13 +54,13 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(UN_SECURED_URLs).permitAll()
                 .requestMatchers("/api/v1/users/profile/**")
-                .hasAuthority("ROLE_USER")
+                .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .requestMatchers("/api/v1/users/**", "/api/v1/famousPlace/**", "/api/v1/provinces/**")
                 .hasAuthority("ROLE_ADMIN")
                 .and()
                 .authenticationProvider(authenticationProvider())
-                //.addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic();
         return http.build();
     }
 

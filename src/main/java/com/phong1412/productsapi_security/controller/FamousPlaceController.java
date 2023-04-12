@@ -63,7 +63,7 @@ public class FamousPlaceController {
         return ResponseEntity.ok().body("delete user successfully");
     }
 
-    @GetMapping
+    @GetMapping("/all/page")
     public ResponseEntity<Page<Famousplace>> getFamousPlacePage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

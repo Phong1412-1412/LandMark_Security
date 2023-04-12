@@ -37,7 +37,8 @@ public class JwtService {
                 .setSubject(account)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, getSignKey()).compact();
+                .setHeaderParam("typ", "JWT")
+                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
     private Claims extractClaimsAll(String token) {
