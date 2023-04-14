@@ -67,30 +67,30 @@ public class UserService implements IUserService {
 
     @Override
     public User UpdateUserById(User user) {
-        if (userRepository.findUsersById(user.getId()).isPresent()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+        User newUser = userRepository.findUsersById(user.getId()).orElse(null);
+        if (newUser != null) {
+            if (!user.getUseraccount().equals(newUser.getUseraccount())) {
+                newUser.setUseraccount(newUser.getUseraccount());
+            }
+            newUser.setUsername(user.getUsername());
+            newUser.setEmail(user.getEmail());
+            newUser.setRole(user.getRole());
+            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepository.save(newUser);
         }
         throw new BadException("Can't find user with id " + user.getId() + " to update");
     }
 
     @Override
-    public User updateUserByName(UserUpdate userUpdate) {
-        User user = userRepository.findUserByUseraccount(userUpdate.useraccount()).orElse(null);
+    public User updateUserByName(String nameAccount, UserUpdate userUpdate) {
+        User user = userRepository.findUserByUseraccount(nameAccount).orElse(null);
         if (user != null) {
-            user.setUseraccount(user.getUseraccount());
-            if (userUpdate.username().isEmpty()) {
-                user.setUsername(user.getUsername());
-            }
-            if (userUpdate.email().isEmpty()) {
-                user.setEmail(user.getEmail());
-            }
             user.setUsername(userUpdate.username());
             user.setEmail(userUpdate.email());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(userUpdate.password()));
             return userRepository.save(user);
         }
-        throw new BadException("Can't find user with name " + userUpdate.username() + " to update");
+        throw new BadException("Can't find user with account name: " + userUpdate.username() + " to update");
     }
 
     @Override

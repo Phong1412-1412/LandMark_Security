@@ -4,6 +4,7 @@ import com.phong1412.productsapi_security.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,9 +27,6 @@ public class AppSecurityConfig {
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
 
-    @Autowired
-    private CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,7 +38,6 @@ public class AppSecurityConfig {
             "/api/v1/famousPlace/details/**",
             "/api/v1/famousPlace/all/**",
             "/api/v1/famousPlace/search/**",
-            "/api/v1/authenticate/**",
             "/api/v1/users/authentication/**"
     };
 
@@ -49,13 +46,19 @@ public class AppSecurityConfig {
         http
                 .csrf()
                 .disable()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/api/v1/authenticate")
+                .permitAll()
+                .and()
+                .cors()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(UN_SECURED_URLs).permitAll()
                 .requestMatchers("/api/v1/users/profile/**")
                 .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .requestMatchers("/api/v1/users/**", "/api/v1/famousPlace/**", "/api/v1/provinces/**")
+                .requestMatchers("/**", "/api/v1/users/**", "/api/v1/famousPlace/**", "/api/v1/provinces/**")
                 .hasAuthority("ROLE_ADMIN")
                 .and()
                 .authenticationProvider(authenticationProvider())
